@@ -4,10 +4,12 @@ from PIL import Image
 
 class RoleSelectionPage(ctk.CTkFrame):
 
-    def __init__(self, parent):
+    def __init__(self, parent, app):
         super().__init__(parent, fg_color="#071224")
 
+        self.app = app
         self.role_cards = []
+
         self.build_ui()
 
     # ==================================
@@ -30,7 +32,7 @@ class RoleSelectionPage(ctk.CTkFrame):
         )
 
     # ==================================
-    # BUTTON HOVER
+    # BUTTON HOVER EFFECT
     # ==================================
     def on_button_hover(self, btn, hover_color):
 
@@ -99,7 +101,8 @@ class RoleSelectionPage(ctk.CTkFrame):
                 "#3B82F6",
                 "#1E3A8A",
                 "assets/icons/admin2.png",
-                "#60A5FA"
+                "#60A5FA",
+                self.app.show_admin_dashboard
             ),
             (
                 "Teacher",
@@ -107,7 +110,8 @@ class RoleSelectionPage(ctk.CTkFrame):
                 "#EF4444",
                 "#7F1D1D",
                 "assets/icons/teacher2.png",
-                "#F87171"
+                "#F87171",
+                self.app.show_teacher_login
             ),
             (
                 "Student",
@@ -115,7 +119,8 @@ class RoleSelectionPage(ctk.CTkFrame):
                 "#10B981",
                 "#065F46",
                 "assets/icons/student2.png",
-                "#34D399"
+                "#34D399",
+                self.app.show_student_preview
             )
         ]
 
@@ -125,7 +130,8 @@ class RoleSelectionPage(ctk.CTkFrame):
             color,
             bg_color,
             icon_path,
-            hover_color
+            hover_color,
+            command
         ) in enumerate(roles):
 
             # ==================================
@@ -177,7 +183,7 @@ class RoleSelectionPage(ctk.CTkFrame):
             )
 
             # ==================================
-            # ICON BG
+            # ICON CONTAINER
             # ==================================
             icon_bg = ctk.CTkFrame(
                 card,
@@ -243,6 +249,7 @@ class RoleSelectionPage(ctk.CTkFrame):
             enter_btn = ctk.CTkButton(
                 card,
                 text="Continue",
+                command=command,
                 width=220,
                 height=50,
                 corner_radius=18,

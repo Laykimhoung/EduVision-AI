@@ -6,12 +6,17 @@ from ui.analytics_page import AnalyticsPage
 from ui.reports_page import ReportsPage
 from ui.settings_page import SettingsPage
 
+from ui.admin.dashboard import AdminDashboard
+from ui.teacher.login_page import TeacherLoginPage
+from ui.student.preview_page import StudentPreviewPage
+
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
 
 class MainWindow(ctk.CTk):
+
     def __init__(self):
         super().__init__()
 
@@ -26,9 +31,6 @@ class MainWindow(ctk.CTk):
 
     def build_ui(self):
 
-        # ==========================
-        # MAIN LAYOUT
-        # ==========================
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
@@ -41,15 +43,20 @@ class MainWindow(ctk.CTk):
             fg_color="#111827",
             corner_radius=0
         )
-        self.sidebar.grid(row=0, column=0, sticky="ns")
+
+        self.sidebar.grid(
+            row=0,
+            column=0,
+            sticky="ns"
+        )
+
         self.sidebar.grid_propagate(False)
 
         # Logo
         self.logo = ctk.CTkLabel(
             self.sidebar,
             text="EduVision AI",
-            font=("Segoe UI", 34, "bold"),
-            text_color="#F9FAFB"
+            font=("Segoe UI", 34, "bold")
         )
         self.logo.pack(pady=(45, 8))
 
@@ -61,17 +68,17 @@ class MainWindow(ctk.CTk):
         )
         self.logo_sub.pack()
 
-        # Divider
-        self.divider = ctk.CTkFrame(
+        divider = ctk.CTkFrame(
             self.sidebar,
             height=2,
             fg_color="#1E293B"
         )
-        self.divider.pack(fill="x", padx=28, pady=35)
+        divider.pack(
+            fill="x",
+            padx=28,
+            pady=35
+        )
 
-        # ==========================
-        # SIDEBAR BUTTONS
-        # ==========================
         sidebar_buttons = [
             ("Dashboard", self.show_dashboard),
             ("Role Selection", self.show_role_selection),
@@ -81,6 +88,7 @@ class MainWindow(ctk.CTk):
         ]
 
         for text, command in sidebar_buttons:
+
             btn = ctk.CTkButton(
                 self.sidebar,
                 text=text,
@@ -99,14 +107,10 @@ class MainWindow(ctk.CTk):
                 pady=8
             )
 
-        # ==========================
-        # THEME SWITCH
-        # ==========================
         self.theme_switch = ctk.CTkSwitch(
             self.sidebar,
             text="Light Mode",
-            command=self.toggle_theme,
-            font=("Segoe UI", 15)
+            command=self.toggle_theme
         )
 
         self.theme_switch.pack(
@@ -115,12 +119,11 @@ class MainWindow(ctk.CTk):
         )
 
         # ==========================
-        # CONTENT AREA
+        # CONTENT
         # ==========================
         self.content = ctk.CTkFrame(
             self,
-            fg_color="#0F172A",
-            corner_radius=0
+            fg_color="#0F172A"
         )
 
         self.content.grid(
@@ -129,11 +132,10 @@ class MainWindow(ctk.CTk):
             sticky="nsew"
         )
 
-        # Default page
         self.show_dashboard()
 
     # ==========================
-    # PAGE ROUTER
+    # ROUTER
     # ==========================
     def clear_page(self):
         for widget in self.content.winfo_children():
@@ -141,48 +143,49 @@ class MainWindow(ctk.CTk):
 
     def show_dashboard(self):
         self.clear_page()
-        DashboardPage(self.content).pack(
-            fill="both",
-            expand=True
-        )
+        DashboardPage(self.content).pack(fill="both", expand=True)
 
     def show_role_selection(self):
         self.clear_page()
-        RoleSelectionPage(self.content).pack(
-            fill="both",
-            expand=True
-        )
+        RoleSelectionPage(
+            self.content,
+            self
+        ).pack(fill="both", expand=True)
 
     def show_analytics(self):
         self.clear_page()
-        AnalyticsPage(self.content).pack(
-            fill="both",
-            expand=True
-        )
+        AnalyticsPage(self.content).pack(fill="both", expand=True)
 
     def show_reports(self):
         self.clear_page()
-        ReportsPage(self.content).pack(
-            fill="both",
-            expand=True
-        )
+        ReportsPage(self.content).pack(fill="both", expand=True)
 
     def show_settings(self):
         self.clear_page()
-        SettingsPage(self.content).pack(
+        SettingsPage(self.content).pack(fill="both", expand=True)
+
+    # ==========================
+    # ROLE ROUTING
+    # ==========================
+    def show_admin_dashboard(self):
+        self.clear_page()
+        AdminDashboard(self.content).pack(
             fill="both",
             expand=True
         )
-    
-    def on_card_hover(self, card, border_color):
-        card.configure(
-            border_color=border_color
+
+    def show_teacher_login(self):
+        self.clear_page()
+        TeacherLoginPage(self.content).pack(
+            fill="both",
+            expand=True
         )
 
-
-    def on_card_leave(self, card):
-        card.configure(
-            border_color="#1E293B"
+    def show_student_preview(self):
+        self.clear_page()
+        StudentPreviewPage(self.content).pack(
+            fill="both",
+            expand=True
         )
 
     # ==========================
