@@ -7,132 +7,143 @@ class LoginTemplate(ctk.CTkFrame):
     def __init__(
         self,
         parent,
-        role_name="Teacher",
-        accent_color="#EF4444",
-        accent_hover="#DC2626",
-        accent_bg="#7F1D1D",
-        icon_path="assets/icons/teacher2.png",
-        hero_title="Welcome.",
-        hero_subtitle="Access your dashboard securely",
-        login_command=None
+        role_name,
+        accent_color,
+        accent_hover,
+        accent_bg,
+        icon_path,
+        hero_title,
+        hero_subtitle,
+        login_command
     ):
-        super().__init__(parent, fg_color="#071224")
+        super().__init__(parent, fg_color="#031126")
 
-        self.role_name = role_name
-        self.accent_color = accent_color
-        self.accent_hover = accent_hover
-        self.accent_bg = accent_bg
-        self.icon_path = icon_path
-        self.hero_title = hero_title
-        self.hero_subtitle = hero_subtitle
         self.login_command = login_command
-
         self.password_visible = False
 
-        self.build_ui()
+        self.build_ui(
+            role_name,
+            accent_color,
+            accent_hover,
+            accent_bg,
+            icon_path,
+            hero_title,
+            hero_subtitle
+        )
 
-    # ==================================
+    # ======================================
     # PASSWORD TOGGLE
-    # ==================================
+    # ======================================
     def toggle_password(self):
 
-        if self.password_visible:
-            self.password_entry.configure(show="●")
-            self.eye_btn.configure(text="👁")
-            self.password_visible = False
-        else:
-            self.password_entry.configure(show="")
-            self.eye_btn.configure(text="🙈")
-            self.password_visible = True
+        self.password_visible = not self.password_visible
 
-    # ==================================
-    # BUTTON HOVER EFFECT
-    # ==================================
-    def button_hover(self):
+        self.password_entry.configure(
+            show="" if self.password_visible else "●"
+        )
 
-        self.login_btn.configure(
-            width=320,
+        self.eye_btn.configure(
+            text="🙈" if self.password_visible else "👁"
+        )
+
+    # ======================================
+    # BUTTON POP ANIMATION
+    # ======================================
+    def animate_button(self, button):
+
+        button.configure(
+            width=355,
             height=58
         )
 
-    def button_leave(self):
-
-        self.login_btn.configure(
-            width=300,
-            height=54
+        self.after(
+            90,
+            lambda: button.configure(
+                width=370,
+                height=62
+            )
         )
 
-    def build_ui(self):
+    # ======================================
+    # UI
+    # ======================================
+    def build_ui(
+        self,
+        role_name,
+        accent_color,
+        accent_hover,
+        accent_bg,
+        icon_path,
+        hero_title,
+        hero_subtitle
+    ):
 
-        # ==================================
-        # MAIN WRAPPER
-        # ==================================
-        wrapper = ctk.CTkFrame(
+        # ======================================
+        # MAIN LAYOUT
+        # ======================================
+        self.grid_columnconfigure(0, weight=2)
+        self.grid_columnconfigure(1, weight=8)
+        self.grid_rowconfigure(0, weight=1)
+
+        # ======================================
+        # LEFT SECTION
+        # ======================================
+        left_section = ctk.CTkFrame(
             self,
             fg_color="transparent"
         )
-        wrapper.pack(
-            fill="both",
-            expand=True,
-            padx=80,
-            pady=60
+
+        left_section.grid(
+            row=0,
+            column=0,
+            sticky="w",
+            padx=(20, 0),
+            pady=45
         )
 
-        # ==================================
-        # MAIN CARD
-        # ==================================
-        card = ctk.CTkFrame(
-            wrapper,
-            fg_color="#121212",
-            corner_radius=35
+        # ======================================
+        # LOGIN FORM
+        # ======================================
+        form = ctk.CTkFrame(
+            left_section,
+            width=480,
+            height=720,
+            fg_color="#F8FAFC",
+            corner_radius=58,
+            border_width=1,
+            border_color="#E2E8F0"
         )
 
-        card.place(
-            relx=0.5,
-            rely=0.5,
-            anchor="center",
-            relwidth=0.88,
-            relheight=0.78
-        )
+        form.pack()
+        form.pack_propagate(False)
 
-        # ==================================
-        # LEFT PANEL (LOGIN)
-        # ==================================
-        left_panel = ctk.CTkFrame(
-            card,
-            width=430,
-            fg_color="#F7F7F7",
-            corner_radius=35
-        )
-
-        left_panel.pack(
-            side="left",
-            fill="y"
-        )
-
-        # Logo
-        logo = ctk.CTkLabel(
-            left_panel,
+        # ======================================
+        # APP TITLE
+        # ======================================
+        title = ctk.CTkLabel(
+            form,
             text="EduVision AI",
-            font=("Segoe UI", 28, "bold"),
-            text_color="#111827"
+            font=("Segoe UI", 32, "bold"),
+            text_color="#0F172A"
         )
-        logo.pack(pady=(40, 25))
+        title.pack(pady=(42, 28))
 
-        # Icon Circle
+        # ======================================
+        # ICON
+        # ======================================
         icon_bg = ctk.CTkFrame(
-            left_panel,
-            width=100,
-            height=100,
-            corner_radius=50,
-            fg_color=self.accent_bg
+            form,
+            width=125,
+            height=125,
+            corner_radius=62,
+            fg_color=accent_bg
         )
-        icon_bg.pack(pady=(15, 20))
+        icon_bg.pack()
 
         icon = ctk.CTkImage(
-            light_image=Image.open(self.icon_path),
-            dark_image=Image.open(self.icon_path),
-            size=(52, 52)
+            light_image=Image.open(icon_path),
+            dark_image=Image.open(icon_path),
+            size=(68, 68)
         )
 
         icon_label = ctk.CTkLabel(
@@ -140,152 +151,194 @@ class LoginTemplate(ctk.CTkFrame):
             image=icon,
             text=""
         )
+
         icon_label.place(
             relx=0.5,
             rely=0.5,
             anchor="center"
         )
 
-        # Title
-        title = ctk.CTkLabel(
-            left_panel,
-            text=f"{self.role_name} Login",
+        # ======================================
+        # LOGIN TITLE
+        # ======================================
+        login_title = ctk.CTkLabel(
+            form,
+            text=f"{role_name} Login",
             font=("Segoe UI", 30, "bold"),
-            text_color="#111827"
+            text_color="#0F172A"
         )
-        title.pack()
+
+        login_title.pack(pady=(26, 8))
 
         subtitle = ctk.CTkLabel(
-            left_panel,
+            form,
             text="Secure access to dashboard",
-            font=("Segoe UI", 15),
-            text_color="#6B7280"
+            font=("Segoe UI", 18),
+            text_color="#64748B"
         )
-        subtitle.pack(pady=(0, 25))
 
-        # Username
+        subtitle.pack(pady=(0, 36))
+
+        # ======================================
+        # USERNAME INPUT
+        # ======================================
         self.username_entry = ctk.CTkEntry(
-            left_panel,
-            width=300,
-            height=50,
-            corner_radius=20,
+            form,
+            width=370,
+            height=60,
+            corner_radius=30,
             placeholder_text="Username",
+            border_width=1,
+            border_color="#CBD5E1",
             fg_color="#FFFFFF",
-            border_color="#D1D5DB",
-            text_color="#111827"
+            text_color="#0F172A",
+            font=("Segoe UI", 16)
         )
-        self.username_entry.pack(pady=10)
 
-        # Password
+        self.username_entry.pack()
+
+        # ======================================
+        # PASSWORD INPUT
+        # ======================================
         password_frame = ctk.CTkFrame(
-            left_panel,
+            form,
             fg_color="transparent"
         )
-        password_frame.pack(pady=10)
+
+        password_frame.pack(pady=(22, 0))
 
         self.password_entry = ctk.CTkEntry(
             password_frame,
-            width=235,
-            height=50,
-            corner_radius=20,
+            width=290,
+            height=60,
+            corner_radius=30,
             placeholder_text="Password",
             show="●",
+            border_width=1,
+            border_color="#CBD5E1",
             fg_color="#FFFFFF",
-            border_color="#D1D5DB",
-            text_color="#111827"
+            text_color="#0F172A",
+            font=("Segoe UI", 16)
         )
-        self.password_entry.pack(side="left")
+
+        self.password_entry.pack(
+            side="left",
+            padx=(0, 12)
+        )
 
         self.eye_btn = ctk.CTkButton(
             password_frame,
             text="👁",
-            width=55,
-            height=50,
-            corner_radius=18,
-            fg_color="#E5E7EB",
-            hover_color="#D1D5DB",
-            text_color="#111827",
+            width=60,
+            height=60,
+            corner_radius=30,
+            fg_color="#E2E8F0",
+            hover_color="#CBD5E1",
+            text_color="#0F172A",
             command=self.toggle_password
         )
-        self.eye_btn.pack(side="left", padx=(10, 0))
 
-        # Login button
-        self.login_btn = ctk.CTkButton(
-            left_panel,
+        self.eye_btn.pack(side="left")
+
+        # ======================================
+        # LOGIN BUTTON
+        # ======================================
+        login_btn = ctk.CTkButton(
+            form,
             text="LOGIN",
-            width=300,
-            height=54,
-            corner_radius=22,
-            fg_color=self.accent_color,
-            hover_color=self.accent_hover,
-            font=("Segoe UI", 16, "bold"),
-            command=self.login_command
-        )
-        self.login_btn.pack(pady=(30, 20))
-
-        self.login_btn.bind(
-            "<Enter>",
-            lambda e: self.button_hover()
+            width=370,
+            height=62,
+            corner_radius=32,
+            fg_color=accent_color,
+            hover_color=accent_hover,
+            font=("Segoe UI", 20, "bold"),
+            command=lambda: [
+                self.animate_button(login_btn),
+                self.login_command()
+            ]
         )
 
-        self.login_btn.bind(
-            "<Leave>",
-            lambda e: self.button_leave()
-        )
+        login_btn.pack(pady=(42, 0))
 
+        # ======================================
+        # FOOTER
+        # ======================================
         footer = ctk.CTkLabel(
-            left_panel,
+            form,
             text="EduVision AI Secure Access",
-            text_color="#6B7280",
-            font=("Segoe UI", 12)
-        )
-        footer.pack(side="bottom", pady=25)
-
-        # ==================================
-        # RIGHT PANEL
-        # ==================================
-        right_panel = ctk.CTkFrame(
-            card,
-            fg_color="#161616"
-        )
-        right_panel.pack(
-            side="left",
-            fill="both",
-            expand=True
+            font=("Segoe UI", 14),
+            text_color="#64748B"
         )
 
-        glow = ctk.CTkFrame(
-            right_panel,
-            width=520,
-            height=520,
-            corner_radius=260,
-            fg_color="#2A2A2A"
-        )
-        glow.place(
-            relx=0.55,
-            rely=0.45,
-            anchor="center"
+        footer.pack(
+            side="bottom",
+            pady=(0, 22)
         )
 
-        hero = ctk.CTkLabel(
-            right_panel,
-            text=self.hero_title,
-            font=("Segoe UI", 52, "bold")
+        # ======================================
+        # RIGHT SECTION
+        # ======================================
+        right_section = ctk.CTkFrame(
+            self,
+            fg_color="#050505"
         )
+
+        right_section.grid(
+            row=0,
+            column=1,
+            sticky="nsew"
+        )
+
+        hero = ctk.CTkFrame(
+            right_section,
+            fg_color="transparent"
+        )
+
         hero.place(
-            relx=0.5,
+            relx=0.08,
             rely=0.5,
-            anchor="center"
+            anchor="w"
         )
 
-        hero_sub = ctk.CTkLabel(
-            right_panel,
-            text=self.hero_subtitle,
-            font=("Segoe UI", 18),
-            text_color="#A1A1AA"
+        hero_title_label = ctk.CTkLabel(
+            hero,
+            text=hero_title,
+            font=("Segoe UI", 60, "bold"),
+            text_color="white"
         )
-        hero_sub.place(
-            relx=0.5,
-            rely=0.58,
-            anchor="center"
+
+        hero_title_label.pack(anchor="w")
+
+        hero_subtitle_label = ctk.CTkLabel(
+            hero,
+            text=hero_subtitle,
+            font=("Segoe UI", 24),
+            text_color="#D1D5DB"
+        )
+
+        hero_subtitle_label.pack(
+            anchor="w",
+            pady=(10, 20)
+        )
+
+        line = ctk.CTkFrame(
+            hero,
+            width=180,
+            height=5,
+            fg_color=accent_color,
+            corner_radius=999
+        )
+
+        line.pack(anchor="w")
+
+        info = ctk.CTkLabel(
+            hero,
+            text=f"{role_name} portal powered by EduVision AI",
+            font=("Segoe UI", 16),
+            text_color="#94A3B8"
+        )
+
+        info.pack(
+            anchor="w",
+            pady=(22, 0)
         )
