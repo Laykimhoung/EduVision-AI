@@ -18,7 +18,14 @@ class TeacherLoginPage(LoginTemplate):
         )
 
     def login(self):
+
         username = self.username_entry.get()
         password = self.password_entry.get()
 
-        print("Teacher Login:", username, password)
+        if username == "teacher" and password == "teacher":
+
+            # content -> MainWindow
+            self.master.master.show_teacher_dashboard()
+
+        else:
+            print("Wrong teacher credentials")

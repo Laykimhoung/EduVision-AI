@@ -8,7 +8,6 @@ class RoleSelectionPage(ctk.CTkFrame):
         super().__init__(parent, fg_color="#071224")
 
         self.app = app
-        self.role_cards = []
 
         self.build_ui()
 
@@ -50,6 +49,9 @@ class RoleSelectionPage(ctk.CTkFrame):
             height=50
         )
 
+    # ==================================
+    # UI
+    # ==================================
     def build_ui(self):
 
         # ==================================
@@ -72,7 +74,7 @@ class RoleSelectionPage(ctk.CTkFrame):
         subtitle.pack()
 
         # ==================================
-        # CONTAINER
+        # CARD CONTAINER
         # ==================================
         container = ctk.CTkFrame(
             self,
@@ -102,7 +104,7 @@ class RoleSelectionPage(ctk.CTkFrame):
                 "#1E3A8A",
                 "assets/icons/admin2.png",
                 "#60A5FA",
-                self.app.show_admin_dashboard
+                self.app.show_admin_login
             ),
             (
                 "Teacher",
@@ -124,6 +126,9 @@ class RoleSelectionPage(ctk.CTkFrame):
             )
         ]
 
+        # ==================================
+        # CREATE CARDS
+        # ==================================
         for i, (
             role,
             desc,
@@ -134,9 +139,7 @@ class RoleSelectionPage(ctk.CTkFrame):
             command
         ) in enumerate(roles):
 
-            # ==================================
             # CARD
-            # ==================================
             card = ctk.CTkFrame(
                 container,
                 fg_color="#0F172A",
@@ -166,9 +169,7 @@ class RoleSelectionPage(ctk.CTkFrame):
                 self.on_card_leave(c)
             )
 
-            # ==================================
-            # ACCENT LINE
-            # ==================================
+            # Accent line
             accent = ctk.CTkFrame(
                 card,
                 fg_color=color,
@@ -183,7 +184,7 @@ class RoleSelectionPage(ctk.CTkFrame):
             )
 
             # ==================================
-            # ICON CONTAINER
+            # ICON
             # ==================================
             icon_bg = ctk.CTkFrame(
                 card,
@@ -215,20 +216,17 @@ class RoleSelectionPage(ctk.CTkFrame):
                 anchor="center"
             )
 
-            # ==================================
             # TITLE
-            # ==================================
             role_label = ctk.CTkLabel(
                 card,
                 text=role,
                 font=("Segoe UI", 30, "bold"),
                 text_color="#F8FAFC"
             )
+
             role_label.pack()
 
-            # ==================================
             # DESCRIPTION
-            # ==================================
             desc_label = ctk.CTkLabel(
                 card,
                 text=desc,
@@ -262,15 +260,19 @@ class RoleSelectionPage(ctk.CTkFrame):
                 pady=(0, 28)
             )
 
-            # Button hover animation
+            # Button animation
             enter_btn.bind(
                 "<Enter>",
-                lambda e, b=enter_btn, hc=hover_color:
+                lambda e,
+                b=enter_btn,
+                hc=hover_color:
                 self.on_button_hover(b, hc)
             )
 
             enter_btn.bind(
                 "<Leave>",
-                lambda e, b=enter_btn, c=color:
+                lambda e,
+                b=enter_btn,
+                c=color:
                 self.on_button_leave(b, c)
             )

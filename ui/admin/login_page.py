@@ -18,7 +18,14 @@ class AdminLoginPage(LoginTemplate):
         )
 
     def login(self):
+
         username = self.username_entry.get()
         password = self.password_entry.get()
 
-        print("Admin Login:", username, password)
+        if username == "admin" and password == "admin":
+
+            # content -> MainWindow
+            self.master.master.show_admin_dashboard()
+
+        else:
+            print("Wrong admin credentials")

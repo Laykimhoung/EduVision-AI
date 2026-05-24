@@ -8,7 +8,10 @@ from ui.settings_page import SettingsPage
 
 from ui.admin.login_page import AdminLoginPage
 from ui.admin.dashboard import AdminDashboard
+
 from ui.teacher.login_page import TeacherLoginPage
+from ui.teacher.dashboard import TeacherDashboard
+
 from ui.student.preview_page import StudentPreviewPage
 
 
@@ -30,14 +33,17 @@ class MainWindow(ctk.CTk):
 
         self.build_ui()
 
+    # ==========================================
+    # BUILD UI
+    # ==========================================
     def build_ui(self):
 
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-        # ==========================
+        # ==========================================
         # SIDEBAR
-        # ==========================
+        # ==========================================
         self.sidebar = ctk.CTkFrame(
             self,
             width=280,
@@ -74,6 +80,7 @@ class MainWindow(ctk.CTk):
             height=2,
             fg_color="#1E293B"
         )
+
         divider.pack(
             fill="x",
             padx=28,
@@ -108,6 +115,7 @@ class MainWindow(ctk.CTk):
                 pady=8
             )
 
+        # Theme Toggle
         self.theme_switch = ctk.CTkSwitch(
             self.sidebar,
             text="Light Mode",
@@ -119,9 +127,9 @@ class MainWindow(ctk.CTk):
             pady=30
         )
 
-        # ==========================
-        # CONTENT
-        # ==========================
+        # ==========================================
+        # CONTENT AREA
+        # ==========================================
         self.content = ctk.CTkFrame(
             self,
             fg_color="#0F172A"
@@ -135,66 +143,73 @@ class MainWindow(ctk.CTk):
 
         self.show_dashboard()
 
-    # ==========================
+    # ==========================================
     # ROUTER
-    # ==========================
+    # ==========================================
     def clear_page(self):
+
         for widget in self.content.winfo_children():
             widget.destroy()
 
-    def show_dashboard(self):
+    def show_page(self, page_class):
+
         self.clear_page()
-        DashboardPage(self.content).pack(fill="both", expand=True)
+
+        page = page_class(self.content)
+        page.pack(
+            fill="both",
+            expand=True
+        )
+
+    # ==========================================
+    # DEFAULT PAGES
+    # ==========================================
+    def show_dashboard(self):
+        self.show_page(DashboardPage)
 
     def show_role_selection(self):
         self.clear_page()
+
         RoleSelectionPage(
             self.content,
             self
         ).pack(fill="both", expand=True)
 
     def show_analytics(self):
-        self.clear_page()
-        AnalyticsPage(self.content).pack(fill="both", expand=True)
+        self.show_page(AnalyticsPage)
 
     def show_reports(self):
-        self.clear_page()
-        ReportsPage(self.content).pack(fill="both", expand=True)
+        self.show_page(ReportsPage)
 
     def show_settings(self):
-        self.clear_page()
-        SettingsPage(self.content).pack(fill="both", expand=True)
+        self.show_page(SettingsPage)
 
-    # ==========================
-    # ROLE ROUTING
-    # ==========================
-    def show_admin_dashboard(self):
-        self.clear_page()
-
-        AdminLoginPage(self.content).pack(
-            fill="both",
-            expand=True
-        )
+    # ==========================================
+    # LOGIN ROUTES
+    # ==========================================
+    def show_admin_login(self):
+        self.show_page(AdminLoginPage)
 
     def show_teacher_login(self):
-        self.clear_page()
-        TeacherLoginPage(self.content).pack(
-            fill="both",
-            expand=True
-        )
-
+        self.show_page(TeacherLoginPage)
 
     def show_student_preview(self):
-        self.clear_page()
-        StudentPreviewPage(self.content).pack(
-            fill="both",
-            expand=True
-        )
+        self.show_page(StudentPreviewPage)
 
-    # ==========================
+    # ==========================================
+    # DASHBOARD ROUTES
+    # ==========================================
+    def show_admin_dashboard(self):
+        self.show_page(AdminDashboard)
+
+    def show_teacher_dashboard(self):
+        self.show_page(TeacherDashboard)
+
+    # ==========================================
     # THEME TOGGLE
-    # ==========================
+    # ==========================================
     def toggle_theme(self):
+
         if self.theme_switch.get() == 1:
             ctk.set_appearance_mode("light")
         else:
