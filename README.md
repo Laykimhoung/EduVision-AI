@@ -59,10 +59,12 @@ This project is powered by the following technologies:
 | CustomTkinter | Modern Desktop GUI |
 | SQLite | Local Database |
 | Pandas | Data Processing |
+| NumPy | AI calculations |
 | Scikit-learn | Machine Learning |
 | Matplotlib | Data Visualization |
 | Plotly | Interactive Charts |
 | ReportLab | PDF Report Generation |
+| openpyxl | Excel Report Generation |
 | Pillow | Image Processing |
 
 ---
@@ -124,10 +126,12 @@ This automatically installs:
 
 - CustomTkinter
 - Pandas
+- Numpy
 - Scikit-learn
 - Matplotlib
 - Plotly
 - ReportLab
+- openpyxl
 - Pillow
 
 ---
