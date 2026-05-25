@@ -17,8 +17,28 @@ class DashboardShell(ctk.CTkFrame):
         self.accent_color = accent_color
         self.menu_items = menu_items
 
+        self.content = None
+
         self.build_ui()
 
+    # ==================================
+    # NAVIGATION
+    # ==================================
+    def navigate(self, page_name):
+        pass
+
+    # ==================================
+    # LOGOUT
+    # ==================================
+    def logout(self):
+
+        self.destroy()
+
+        self.parent.show_role_selection()
+
+    # ==================================
+    # UI
+    # ==================================
     def build_ui(self):
 
         self.grid_columnconfigure(1, weight=1)
@@ -27,92 +47,89 @@ class DashboardShell(ctk.CTkFrame):
         # ==================================
         # SIDEBAR
         # ==================================
-        self.sidebar = ctk.CTkFrame(
+        sidebar = ctk.CTkFrame(
             self,
-            width=270,
+            width=280,
             fg_color="#111827",
             corner_radius=0
         )
 
-        self.sidebar.grid(
+        sidebar.grid(
             row=0,
             column=0,
             sticky="ns"
         )
 
-        self.sidebar.grid_propagate(False)
+        sidebar.grid_propagate(False)
 
-        # ==================================
-        # LOGO
-        # ==================================
+        # Logo
         logo = ctk.CTkLabel(
-            self.sidebar,
+            sidebar,
             text="EduVision AI",
-            font=("Segoe UI", 34, "bold")
+            font=("Segoe UI", 32, "bold")
         )
-        logo.pack(pady=(45, 8))
+        logo.pack(pady=(40, 5))
 
-        role = ctk.CTkLabel(
-            self.sidebar,
+        subtitle = ctk.CTkLabel(
+            sidebar,
             text=f"{self.role_name} Panel",
-            font=("Segoe UI", 15),
-            text_color="#94A3B8"
+            text_color="#94A3B8",
+            font=("Segoe UI", 14)
         )
-        role.pack()
+        subtitle.pack()
 
         divider = ctk.CTkFrame(
-            self.sidebar,
+            sidebar,
             height=2,
             fg_color="#1E293B"
         )
 
         divider.pack(
             fill="x",
-            padx=28,
-            pady=35
+            padx=25,
+            pady=30
         )
 
         # ==================================
-        # MENU
+        # MENU BUTTONS
         # ==================================
         for item in self.menu_items:
 
             btn = ctk.CTkButton(
-                self.sidebar,
+                sidebar,
                 text=item,
-                height=58,
+                height=54,
                 corner_radius=18,
                 fg_color="#172033",
                 hover_color=self.accent_color,
-                font=("Segoe UI", 18),
-                anchor="w"
+                font=("Segoe UI", 17),
+                anchor="w",
+                command=lambda x=item: self.navigate(x)
             )
 
             btn.pack(
                 fill="x",
-                padx=24,
-                pady=8
+                padx=22,
+                pady=7
             )
 
-        # ==================================
-        # LOGOUT BUTTON
-        # ==================================
+        # Logout
         logout_btn = ctk.CTkButton(
-            self.sidebar,
+            sidebar,
             text="Logout",
-            height=58,
+            height=54,
             corner_radius=18,
             fg_color="#991B1B",
             hover_color="#DC2626",
-            font=("Segoe UI", 18, "bold"),
+            font=("Segoe UI", 17),
             command=self.logout
         )
 
         logout_btn.pack(
             side="bottom",
             fill="x",
-            padx=24,
-            pady=30
+            padx=22,
+            pady=25
         )
 
         # ==================================
@@ -130,17 +147,3 @@ class DashboardShell(ctk.CTkFrame):
             padx=(20, 35),
             pady=20
         )
-
-        self.content.grid_columnconfigure(
-            (0, 1, 2, 3),
-            weight=1
-        )
-
-    # ==================================
-    # LOGOUT
-    # ==================================
-    def logout(self):
-
-        self.destroy()
-
-        self.parent.show_role_selection()

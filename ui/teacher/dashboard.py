@@ -12,117 +12,237 @@ class TeacherDashboard(DashboardShell):
             accent_color="#EF4444",
             menu_items=[
                 "Dashboard",
+                "Classroom",
                 "Students",
                 "Attendance",
-                "Grades",
+                "Assessment",
                 "Analytics"
             ]
         )
 
-        self.build_dashboard()
+        self.navigate("Dashboard")
 
+    # ==================================
+    # NAVIGATION
+    # ==================================
+    def clear_content(self):
+
+        for widget in self.content.winfo_children():
+            widget.destroy()
+
+    def navigate(self, page_name):
+
+        self.clear_content()
+
+        if page_name == "Dashboard":
+            self.build_dashboard()
+
+        elif page_name == "Classroom":
+            from ui.teacher.classroom_page import ClassroomPage
+            ClassroomPage(self.content).pack(
+                fill="both",
+                expand=True
+            )
+
+        elif page_name == "Students":
+            from ui.teacher.students_page import StudentsPage
+            StudentsPage(self.content).pack(
+                fill="both",
+                expand=True
+            )
+
+        elif page_name == "Attendance":
+            from ui.teacher.attendance_page import AttendancePage
+            AttendancePage(self.content).pack(
+                fill="both",
+                expand=True
+            )
+
+        elif page_name == "Assessment":
+            from ui.teacher.assessment_page import AssessmentPage
+            AssessmentPage(self.content).pack(
+                fill="both",
+                expand=True
+            )
+
+        elif page_name == "Analytics":
+            from ui.teacher.analytics_page import AnalyticsPage
+            AnalyticsPage(self.content).pack(
+                fill="both",
+                expand=True
+            )
+
+    # ==================================
+    # DASHBOARD UI
+    # ==================================
     def build_dashboard(self):
 
-        # ==================================
+        # ===============================
         # HEADER
-        # ==================================
+        # ===============================
         title = ctk.CTkLabel(
             self.content,
             text="Teacher Dashboard",
-            font=("Segoe UI", 42, "bold")
+            font=("Segoe UI", 40, "bold")
         )
-
-        title.grid(
-            row=0,
-            column=0,
-            columnspan=4,
-            sticky="w",
-            pady=(20, 5)
+        title.pack(
+            anchor="w",
+            padx=35,
+            pady=(25, 5)
         )
 
         subtitle = ctk.CTkLabel(
             self.content,
-            text="Manage students and academic performance",
-            font=("Segoe UI", 18),
+            text="Monitor classes, attendance, assessment and student risk",
+            font=("Segoe UI", 17),
             text_color="#94A3B8"
         )
-
-        subtitle.grid(
-            row=1,
-            column=0,
-            columnspan=4,
-            sticky="w",
-            pady=(0, 35)
+        subtitle.pack(
+            anchor="w",
+            padx=35
         )
 
-        # ==================================
-        # STATS
-        # ==================================
+        # ===============================
+        # STATS CARDS
+        # ===============================
+        stats_frame = ctk.CTkFrame(
+            self.content,
+            fg_color="transparent"
+        )
+        stats_frame.pack(
+            fill="x",
+            padx=30,
+            pady=30
+        )
+
         stats = [
-            ("240", "Students"),
-            ("92%", "Attendance"),
-            ("18", "Assignments"),
-            ("12", "Classes")
+            ("240", "Students", "#EF4444"),
+            ("92%", "Attendance", "#10B981"),
+            ("12", "High Risk", "#F59E0B"),
+            ("18", "Assignments", "#3B82F6")
         ]
 
-        for i, (value, label) in enumerate(stats):
+        for value, label, color in stats:
 
             card = ctk.CTkFrame(
-                self.content,
+                stats_frame,
                 fg_color="#0F172A",
-                corner_radius=28,
-                height=170
+                height=150,
+                corner_radius=28
             )
 
-            card.grid(
-                row=2,
-                column=i,
-                sticky="nsew",
-                padx=12
+            card.pack(
+                side="left",
+                fill="both",
+                expand=True,
+                padx=10
             )
 
             num = ctk.CTkLabel(
                 card,
                 text=value,
-                font=("Segoe UI", 36, "bold"),
-                text_color="#EF4444"
+                font=("Segoe UI", 34, "bold"),
+                text_color=color
             )
-
-            num.pack(pady=(42, 8))
+            num.pack(
+                pady=(30, 5)
+            )
 
             txt = ctk.CTkLabel(
                 card,
                 text=label,
-                font=("Segoe UI", 18),
+                font=("Segoe UI", 17),
                 text_color="#94A3B8"
             )
-
             txt.pack()
 
-        # ==================================
-        # QUICK ACTIONS
-        # ==================================
-        quick_actions = ctk.CTkFrame(
+        # ===============================
+        # MAIN AREA
+        # ===============================
+        body = ctk.CTkFrame(
             self.content,
-            fg_color="#0F172A",
-            corner_radius=30
+            fg_color="transparent"
+        )
+        body.pack(
+            fill="both",
+            expand=True,
+            padx=30,
+            pady=(0, 25)
         )
 
-        quick_actions.grid(
-            row=3,
+        body.grid_columnconfigure(0, weight=2)
+        body.grid_columnconfigure(1, weight=1)
+        body.grid_rowconfigure(0, weight=1)
+
+        # ===============================
+        # RECENT ACTIVITY
+        # ===============================
+        activity_frame = ctk.CTkFrame(
+            body,
+            fg_color="#0F172A",
+            corner_radius=28
+        )
+
+        activity_frame.grid(
+            row=0,
             column=0,
-            columnspan=2,
             sticky="nsew",
-            padx=12,
-            pady=25
+            padx=(0, 15)
+        )
+
+        activity_title = ctk.CTkLabel(
+            activity_frame,
+            text="Recent Activity",
+            font=("Segoe UI", 26, "bold")
+        )
+        activity_title.pack(
+            anchor="w",
+            padx=25,
+            pady=(25, 20)
+        )
+
+        activities = [
+            "✓ Attendance recorded for Grade 12A",
+            "✓ Quiz scores updated",
+            "✓ Homework submitted by 34 students",
+            "✓ Midterm grades published",
+            "⚠ 4 students marked high risk"
+        ]
+
+        for item in activities:
+
+            label = ctk.CTkLabel(
+                activity_frame,
+                text=item,
+                font=("Segoe UI", 17),
+                text_color="#CBD5E1"
+            )
+            label.pack(
+                anchor="w",
+                padx=25,
+                pady=8
+            )
+
+        # ===============================
+        # QUICK ACTIONS
+        # ===============================
+        action_frame = ctk.CTkFrame(
+            body,
+            fg_color="#0F172A",
+            corner_radius=28
+        )
+
+        action_frame.grid(
+            row=0,
+            column=1,
+            sticky="nsew"
         )
 
         quick_title = ctk.CTkLabel(
-            quick_actions,
+            action_frame,
             text="Quick Actions",
             font=("Segoe UI", 26, "bold")
         )
-
         quick_title.pack(
             anchor="w",
             padx=25,
@@ -131,17 +251,17 @@ class TeacherDashboard(DashboardShell):
 
         actions = [
             "Take Attendance",
-            "Add Grades",
-            "Manage Students",
-            "Generate Report"
+            "Open Students",
+            "Assessment",
+            "Analytics"
         ]
 
         for action in actions:
 
             btn = ctk.CTkButton(
-                quick_actions,
+                action_frame,
                 text=action,
-                height=52,
+                height=50,
                 corner_radius=18,
                 fg_color="#EF4444",
                 hover_color="#DC2626",
@@ -150,58 +270,6 @@ class TeacherDashboard(DashboardShell):
 
             btn.pack(
                 fill="x",
-                padx=25,
-                pady=8
-            )
-
-        # ==================================
-        # RECENT ACTIVITY
-        # ==================================
-        activity = ctk.CTkFrame(
-            self.content,
-            fg_color="#0F172A",
-            corner_radius=30
-        )
-
-        activity.grid(
-            row=3,
-            column=2,
-            columnspan=2,
-            sticky="nsew",
-            padx=12,
-            pady=25
-        )
-
-        activity_title = ctk.CTkLabel(
-            activity,
-            text="Recent Activity",
-            font=("Segoe UI", 26, "bold")
-        )
-
-        activity_title.pack(
-            anchor="w",
-            padx=25,
-            pady=(25, 20)
-        )
-
-        activities = [
-            "• Attendance updated",
-            "• Grade report generated",
-            "• Student record updated",
-            "• Assignment uploaded"
-        ]
-
-        for item in activities:
-
-            label = ctk.CTkLabel(
-                activity,
-                text=item,
-                font=("Segoe UI", 18),
-                text_color="#CBD5E1"
-            )
-
-            label.pack(
-                anchor="w",
                 padx=25,
                 pady=8
             )
