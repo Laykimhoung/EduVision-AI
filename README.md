@@ -1,4 +1,4 @@
-# 🎓 EduVision AI
+# 🎓 Student Performance Prediction
 
 > An AI-powered Student Management System for Academic Performance Monitoring and Early Intervention
 
@@ -10,7 +10,7 @@
 
 ## 📌 Project Overview
 
-**EduVision AI** is a modern desktop-based student management system designed to monitor academic performance, predict at-risk students, and recommend intervention strategies using Artificial Intelligence.
+**Student Performance Prediction** is a modern desktop-based student management system designed to monitor academic performance, predict at-risk students, and recommend intervention strategies using Artificial Intelligence.
 
 The project is inspired by modern educational analytics systems and research on AI-enhanced student performance monitoring.
 
@@ -31,7 +31,7 @@ This project is currently **under development** and continuously improving.
 
 > **Work In Progress (WIP)**
 
-EduVision AI is actively being developed.
+**Student Performance Prediction** is actively being developed.
 
 Current development focus includes:
 
@@ -70,12 +70,13 @@ This project is powered by the following technologies:
 ---
 ## 🚀 Installation & Setup
 
-Follow these steps to run EduVision AI locally.
+Follow these steps to run **Student Performance Prediction** locally.
 
 ### Step 1 — Clone the Repository
 
 ```bash
-git clone https://github.com/Laykimhoung/EduVision-AI
+git clone https://github.com/Laykimhoung/student-performance-prediction.git
+cd student-performance-prediction
 ```
 
 ---
@@ -85,7 +86,6 @@ git clone https://github.com/Laykimhoung/EduVision-AI
 Create a local Python virtual environment:
 
 ```bash
-cd EduVision-AI
 python -m venv .venv
 ```
 
@@ -138,7 +138,7 @@ This automatically installs:
 
 ### Step 5 — Run the Application
 
-Start EduVision AI:
+Start **Student Performance Prediction**:
 
 ```bash
 python app.py
@@ -181,7 +181,7 @@ python app.py
 
 ## 🤖 AI Features
 
-EduVision AI uses machine learning techniques to:
+**Student Performance Prediction** uses machine learning techniques to:
 
 - Predict academic risk levels
 - Detect weak academic performance
@@ -261,26 +261,10 @@ Quick self-analysis mode:
 
 ---
 
-## 🎯 Project Goal
-
-The objective of EduVision AI is to build a professional and intelligent educational platform capable of helping institutions monitor academic performance and provide early intervention support through Artificial Intelligence.
-
----
-
-
-
-## 📄 License
-
-This project is currently for educational and academic purposes.
-
----
-
-## 👨‍💻 Author
+## 👨‍💻 Developer
 
 **Lay Kimhoung (Xakuraii)**
 
 Computer Science Student
 
 ---
-
-⭐ *EduVision AI is actively evolving — more features coming soon.*
