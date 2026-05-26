@@ -1,6 +1,8 @@
-# 🎓 EduVision AI — Student Performance Prediction System
+# 🎓 EduVision AI (Student Performance Prediction)
 
-> An AI-powered Student Management System for Academic Performance Monitoring and Early Intervention
+> Student Performance Prediction System
+
+An AI-powered system for academic performance monitoring, risk prediction, and early intervention.
 
 ![Status](https://img.shields.io/badge/Status-In%20Progress-orange)
 ![Python](https://img.shields.io/badge/Python-3.11.x-blue)
