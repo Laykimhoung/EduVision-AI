@@ -12,7 +12,7 @@ from pathlib import Path
 from datetime import datetime
 
 
-def export_class_pdf(class_data, students):
+def export_student_pdf(student):
 
     # ==================================
     # SAVE LOCATION
@@ -20,7 +20,7 @@ def export_class_pdf(class_data, students):
     downloads_path = Path.home() / "Downloads"
 
     file_name = (
-        f'{class_data["name"].replace(" ", "_")}'
+        f'{student["name"].replace(" ", "_")}'
         f'_report.pdf'
     )
 
@@ -58,15 +58,15 @@ def export_class_pdf(class_data, students):
 
     story.append(
         Paragraph(
-            f"Student Performance Report - {class_data['name']}",
+            f'Student Performance Report - {student["name"]}',
             heading_style
         )
     )
 
     story.append(
         Paragraph(
-            f"Generated on: "
-            f"{datetime.now().strftime('%d/%m/%Y')}",
+            f'Generated on: '
+            f'{datetime.now().strftime("%d/%m/%Y")}',
             body_style
         )
     )
@@ -74,29 +74,30 @@ def export_class_pdf(class_data, students):
     story.append(Spacer(1, 20))
 
     # ==================================
-    # CLASS SUMMARY
+    # STUDENT INFO
     # ==================================
     story.append(
         Paragraph(
-            "Class Information",
+            "Student Information",
             heading_style
         )
     )
 
-    summary_data = [
-        ["Class", class_data["name"]],
-        ["Students", class_data["students"]],
-        ["Attendance", f'{class_data["attendance"]}%'],
-        ["Average", f'{class_data["average"]}%'],
-        ["At Risk", class_data["risk"]]
+    info_data = [
+        ["Student", student["name"]],
+        ["ID", student["id"]],
+        ["Class", student["class"]],
+        ["Semester", "Semester 1"],
+        ["Attendance", f'{student["attendance"]}%'],
+        ["Risk", student["risk"]]
     ]
 
-    summary_table = Table(
-        summary_data,
+    info_table = Table(
+        info_data,
         colWidths=[150, 250]
     )
 
-    summary_table.setStyle(TableStyle([
+    info_table.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (0, -1),
          colors.HexColor("#1E3A8A")),
 
@@ -119,55 +120,38 @@ def export_class_pdf(class_data, students):
          "MIDDLE")
     ]))
 
-    story.append(summary_table)
+    story.append(info_table)
 
     story.append(Spacer(1, 25))
 
     # ==================================
-    # STUDENT TABLE
+    # PERFORMANCE TABLE
     # ==================================
     story.append(
         Paragraph(
-            f"{class_data['name']} Student List",
+            "Academic Performance",
             heading_style
         )
     )
 
-    table_data = [[
-        "ID",
-        "Student",
-        "Attendance",
-        "Quiz",
-        "Homework",
-        "Assignment",
-        "Midterm",
-        "Final",
-        "Participation",
-        "Project",
-        "Behavior",
-        "Risk"
-    ]]
+    performance_data = [
+        ["Category", "Score"],
+        ["Quiz", student["quiz"]],
+        ["Homework", student["homework"]],
+        ["Assignment", student["assignment"]],
+        ["Midterm", student["midterm"]],
+        ["Final", student["final"]],
+        ["Participation", student["participation"]],
+        ["Project", student["project"]],
+        ["Behavior", student["behavior"]]
+    ]
 
-    for student in students:
+    performance_table = Table(
+        performance_data,
+        colWidths=[220, 180]
+    )
 
-        table_data.append([
-            student["id"],
-            student["name"],
-            student["attendance"],
-            student["quiz"],
-            student["homework"],
-            student["assignment"],
-            student["midterm"],
-            student["final"],
-            student["participation"],
-            student["project"],
-            student["behavior"],
-            student["risk"]
-        ])
-
-    student_table = Table(table_data)
-
-    style = [
+    performance_table.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, 0),
          colors.HexColor("#1E3A8A")),
 
@@ -185,63 +169,93 @@ def export_class_pdf(class_data, students):
 
         ("VALIGN", (0, 0), (-1, -1),
          "MIDDLE")
-    ]
+    ]))
 
-    # Risk colors
-    for row_index, student in enumerate(
-        students,
-        start=1
-    ):
-
-        risk = student["risk"]
-
-        if risk == "Low":
-            color = colors.HexColor(
-                "#DCFCE7"
-            )
-
-        elif risk == "Medium":
-            color = colors.HexColor(
-                "#FEF3C7"
-            )
-
-        else:
-            color = colors.HexColor(
-                "#FEE2E2"
-            )
-
-        style.append((
-            "BACKGROUND",
-            (-1, row_index),
-            (-1, row_index),
-            color
-        ))
-
-    student_table.setStyle(
-        TableStyle(style)
-    )
-
-    story.append(student_table)
+    story.append(performance_table)
 
     story.append(Spacer(1, 25))
 
     # ==================================
-    # AI RECOMMENDATION
+    # AI RISK ANALYSIS
     # ==================================
     story.append(
         Paragraph(
-            "AI Recommendation",
+            "AI Risk Prediction",
             heading_style
         )
     )
 
+    risk_color = "#DCFCE7"
+
+    if student["risk"] == "Medium":
+        risk_color = "#FEF3C7"
+
+    elif student["risk"] == "High":
+        risk_color = "#FEE2E2"
+
+    risk_table = Table([
+        ["Risk Level", student["risk"]]
+    ], colWidths=[200, 200])
+
+    risk_table.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (0, 0),
+         colors.HexColor("#1E3A8A")),
+
+        ("TEXTCOLOR", (0, 0), (0, 0),
+         colors.white),
+
+        ("BACKGROUND", (1, 0), (1, 0),
+         colors.HexColor(risk_color)),
+
+        ("FONTNAME", (0, 0), (-1, -1),
+         "Helvetica-Bold"),
+
+        ("GRID", (0, 0), (-1, -1),
+         1, colors.black),
+
+        ("ALIGN", (0, 0), (-1, -1),
+         "CENTER")
+    ]))
+
+    story.append(risk_table)
+
+    story.append(Spacer(1, 25))
+
+    # ==================================
+    # RECOMMENDATION
+    # ==================================
     story.append(
         Paragraph(
-            "Students with weak attendance "
-            "and unstable academic "
-            "performance should receive "
-            "additional intervention, "
-            "monitoring, and tutoring.",
+            "Recommendation",
+            heading_style
+        )
+    )
+
+    if student["risk"] == "High":
+
+        recommendation = (
+            "Immediate intervention recommended. "
+            "Monitor attendance and provide "
+            "additional academic support."
+        )
+
+    elif student["risk"] == "Medium":
+
+        recommendation = (
+            "Continue monitoring progress and "
+            "encourage participation improvement."
+        )
+
+    else:
+
+        recommendation = (
+            "Maintain current academic performance "
+            "and attendance consistency."
+        )
+
+    story.append(
+        Paragraph(
+            recommendation,
             body_style
         )
     )
@@ -261,7 +275,7 @@ def export_class_pdf(class_data, students):
     doc.build(story)
 
     print(
-        f"PDF exported: {file_path}"
+        f"Student PDF exported: {file_path}"
     )
 
     return str(file_path)

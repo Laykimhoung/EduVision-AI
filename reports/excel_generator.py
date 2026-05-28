@@ -1,0 +1,217 @@
+from openpyxl import Workbook
+from openpyxl.styles import (
+    Font,
+    PatternFill,
+    Border,
+    Side,
+    Alignment
+)
+from openpyxl.utils import get_column_letter
+from datetime import datetime
+from pathlib import Path
+
+
+def export_class_excel(class_data, students):
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Student Performance"
+
+    # ==================================
+    # STYLES
+    # ==================================
+    dark_blue = "1E3A8A"
+    green = "DCFCE7"
+    yellow = "FEF3C7"
+    red = "FEE2E2"
+
+    header_fill = PatternFill(
+        fill_type="solid",
+        fgColor=dark_blue
+    )
+
+    thin_border = Border(
+        left=Side(style="thin"),
+        right=Side(style="thin"),
+        top=Side(style="thin"),
+        bottom=Side(style="thin")
+    )
+
+    center = Alignment(
+        horizontal="center",
+        vertical="center"
+    )
+
+    bold_font = Font(bold=True)
+
+    # ==================================
+    # CLASS SUMMARY (6 x 2 TABLE)
+    # ==================================
+    summary_rows = [
+        ("Class", class_data["name"]),
+        ("Students", class_data["students"]),
+        ("Average", f'{class_data["average"]}%'),
+        ("Date", datetime.now().strftime("%d/%m/%Y")),
+        ("Attendance", f'{class_data["attendance"]}%'),
+        ("At Risk", class_data["risk"])
+    ]
+
+    for row_index, (label, value) in enumerate(summary_rows, start=1):
+
+        label_cell = ws.cell(
+            row=row_index,
+            column=1
+        )
+
+        value_cell = ws.cell(
+            row=row_index,
+            column=2
+        )
+
+        label_cell.value = label
+        value_cell.value = value
+
+        label_cell.font = bold_font
+
+        label_cell.alignment = center
+        value_cell.alignment = center
+
+        label_cell.border = thin_border
+        value_cell.border = thin_border
+
+    # ==================================
+    # TABLE HEADER
+    # ==================================
+    headers = [
+        "ID",
+        "Student",
+        "Attendance",
+        "Quiz",
+        "Homework",
+        "Assignment",
+        "Midterm",
+        "Final",
+        "Participation",
+        "Project",
+        "Behavior",
+        "Risk"
+    ]
+
+    start_row = 9
+
+    for col, header in enumerate(headers, start=1):
+
+        cell = ws.cell(
+            row=start_row,
+            column=col
+        )
+
+        cell.value = header
+
+        cell.font = Font(
+            bold=True,
+            color="FFFFFF"
+        )
+
+        cell.fill = header_fill
+        cell.border = thin_border
+        cell.alignment = center
+
+    # ==================================
+    # STUDENT DATA
+    # ==================================
+    row = start_row + 1
+
+    for student in students:
+
+        data = [
+            student["id"],
+            student["name"],
+            student["attendance"],
+            student["quiz"],
+            student["homework"],
+            student["assignment"],
+            student["midterm"],
+            student["final"],
+            student["participation"],
+            student["project"],
+            student["behavior"],
+            student["risk"]
+        ]
+
+        for col, value in enumerate(data, start=1):
+
+            cell = ws.cell(
+                row=row,
+                column=col,
+                value=value
+            )
+
+            cell.border = thin_border
+            cell.alignment = center
+
+            # Risk color
+            if col == 12:
+
+                if value == "Low":
+                    cell.fill = PatternFill(
+                        fill_type="solid",
+                        fgColor=green
+                    )
+
+                elif value == "Medium":
+                    cell.fill = PatternFill(
+                        fill_type="solid",
+                        fgColor=yellow
+                    )
+
+                elif value == "High":
+                    cell.fill = PatternFill(
+                        fill_type="solid",
+                        fgColor=red
+                    )
+
+        row += 1
+
+    # ==================================
+    # AUTO COLUMN WIDTH
+    # ==================================
+    for column in ws.columns:
+
+        max_length = 0
+        column_letter = get_column_letter(
+            column[0].column
+        )
+
+        for cell in column:
+
+            try:
+                if cell.value:
+                    max_length = max(
+                        max_length,
+                        len(str(cell.value))
+                    )
+            except:
+                pass
+
+        ws.column_dimensions[
+            column_letter
+        ].width = max_length + 4
+
+    # ==================================
+    # SAVE TO DOWNLOADS
+    # ==================================
+    downloads_path = Path.home() / "Downloads"
+
+    file_name = (
+        f'{class_data["name"].replace(" ", "_")}'
+        f'_report.xlsx'
+    )
+
+    file_path = downloads_path / file_name
+
+    wb.save(file_path)
+
+    print(f"Excel exported: {file_path}")
+
+    return str(file_path)

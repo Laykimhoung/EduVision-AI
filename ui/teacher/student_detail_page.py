@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from reports.student_pdf_generator import export_student_pdf
 
 
 class StudentDetailPage(ctk.CTkFrame):
@@ -19,6 +20,18 @@ class StudentDetailPage(ctk.CTkFrame):
 
         self.build_ui()
 
+    # ==================================
+    # EXPORT PDF
+    # ==================================
+    def export_pdf(self):
+
+        export_student_pdf(
+            self.student_data
+        )
+
+    # ==================================
+    # UI
+    # ==================================
     def build_ui(self):
 
         student = self.student_data
@@ -37,7 +50,7 @@ class StudentDetailPage(ctk.CTkFrame):
         )
 
         # ==================================
-        # TOP HEADER (FIXED)
+        # HEADER
         # ==================================
         top_bar = ctk.CTkFrame(
             scroll_page,
@@ -50,15 +63,13 @@ class StudentDetailPage(ctk.CTkFrame):
             pady=(25, 10)
         )
 
-        # LEFT SIDE
+        # LEFT
         title_frame = ctk.CTkFrame(
             top_bar,
             fg_color="transparent"
         )
 
-        title_frame.pack(
-            side="left"
-        )
+        title_frame.pack(side="left")
 
         title = ctk.CTkLabel(
             title_frame,
@@ -77,9 +88,33 @@ class StudentDetailPage(ctk.CTkFrame):
 
         subtitle.pack(anchor="w")
 
-        # RIGHT SIDE BACK BUTTON
-        back_btn = ctk.CTkButton(
+        # RIGHT BUTTONS
+        btn_frame = ctk.CTkFrame(
             top_bar,
+            fg_color="transparent"
+        )
+
+        btn_frame.pack(side="right")
+
+        export_btn = ctk.CTkButton(
+            btn_frame,
+            text="Export PDF",
+            width=150,
+            height=46,
+            corner_radius=16,
+            fg_color="#2563EB",
+            hover_color="#1D4ED8",
+            font=("Segoe UI", 16, "bold"),
+            command=self.export_pdf
+        )
+
+        export_btn.pack(
+            side="left",
+            padx=(0, 12)
+        )
+
+        back_btn = ctk.CTkButton(
+            btn_frame,
             text="← Back",
             width=140,
             height=46,
@@ -90,7 +125,7 @@ class StudentDetailPage(ctk.CTkFrame):
             command=self.back_command
         )
 
-        back_btn.pack(side="right")
+        back_btn.pack(side="left")
 
         # ==================================
         # BODY
@@ -101,10 +136,10 @@ class StudentDetailPage(ctk.CTkFrame):
         )
 
         body.pack(
-            fill="x",
+            fill="both",
             expand=True,
             padx=30,
-            pady=(0, 15)
+            pady=(0, 35)
         )
 
         body.grid_columnconfigure(0, weight=2)
@@ -170,13 +205,11 @@ class StudentDetailPage(ctk.CTkFrame):
             pady=25
         )
 
-        attendance_title = ctk.CTkLabel(
+        ctk.CTkLabel(
             attendance_card,
             text="Attendance",
             font=("Segoe UI", 22, "bold")
-        )
-
-        attendance_title.pack(
+        ).pack(
             anchor="w",
             padx=20,
             pady=(20, 5)
@@ -191,29 +224,25 @@ class StudentDetailPage(ctk.CTkFrame):
         else:
             attendance_color = "#10B981"
 
-        attendance_value = ctk.CTkLabel(
+        ctk.CTkLabel(
             attendance_card,
             text=f"{attendance}%",
             font=("Segoe UI", 36, "bold"),
             text_color=attendance_color
-        )
-
-        attendance_value.pack(
+        ).pack(
             anchor="w",
             padx=20,
             pady=(0, 20)
         )
 
         # ==================================
-        # ACADEMIC PERFORMANCE
+        # PERFORMANCE
         # ==================================
-        performance_title = ctk.CTkLabel(
+        ctk.CTkLabel(
             left_panel,
             text="Academic Performance",
             font=("Segoe UI", 28, "bold")
-        )
-
-        performance_title.pack(
+        ).pack(
             anchor="w",
             padx=25,
             pady=(5, 15)
@@ -271,6 +300,13 @@ class StudentDetailPage(ctk.CTkFrame):
                 padx=20
             )
 
+        # extra bottom spacing
+        ctk.CTkFrame(
+            left_panel,
+            fg_color="transparent",
+            height=20
+        ).pack()
+
         # ==================================
         # RIGHT PANEL
         # ==================================
@@ -286,13 +322,11 @@ class StudentDetailPage(ctk.CTkFrame):
             sticky="nsew"
         )
 
-        risk_title = ctk.CTkLabel(
+        ctk.CTkLabel(
             right_panel,
             text="AI Risk Prediction",
             font=("Segoe UI", 28, "bold")
-        )
-
-        risk_title.pack(
+        ).pack(
             anchor="w",
             padx=25,
             pady=(25, 20)
@@ -318,24 +352,20 @@ class StudentDetailPage(ctk.CTkFrame):
         else:
             risk_color = "#10B981"
 
-        risk_label = ctk.CTkLabel(
+        ctk.CTkLabel(
             risk_card,
             text=f"{risk.upper()} RISK",
             font=("Segoe UI", 30, "bold"),
             text_color=risk_color
-        )
-
-        risk_label.pack(
+        ).pack(
             pady=25
         )
 
-        factor_title = ctk.CTkLabel(
+        ctk.CTkLabel(
             right_panel,
             text="Risk Factors",
             font=("Segoe UI", 24, "bold")
-        )
-
-        factor_title.pack(
+        ).pack(
             anchor="w",
             padx=25,
             pady=(30, 15)
@@ -363,30 +393,26 @@ class StudentDetailPage(ctk.CTkFrame):
         recommendation_card.pack(
             fill="x",
             padx=25,
-            pady=(30, 25)
+            pady=(30, 30)
         )
 
-        recommendation_title = ctk.CTkLabel(
+        ctk.CTkLabel(
             recommendation_card,
             text="Recommendation",
             font=("Segoe UI", 22, "bold")
-        )
-
-        recommendation_title.pack(
+        ).pack(
             anchor="w",
             padx=20,
             pady=(20, 10)
         )
 
-        recommendation_text = ctk.CTkLabel(
+        ctk.CTkLabel(
             recommendation_card,
             text=student["recommendation"],
             justify="left",
             font=("Segoe UI", 15),
             text_color="#CBD5E1"
-        )
-
-        recommendation_text.pack(
+        ).pack(
             anchor="w",
             padx=20,
             pady=(0, 20)

@@ -2,6 +2,8 @@ from ui.teacher.student_detail_page import StudentDetailPage
 from ui.teacher.grade_entry_page import GradeEntryPage
 from ui.teacher.attendance_page import AttendancePage
 from ui.teacher.analytics_page import AnalyticsPage
+from reports.pdf_generator import export_class_pdf
+from reports.excel_generator import export_class_excel
 import customtkinter as ctk
 
 
@@ -180,6 +182,26 @@ class ClassDetailPage(ctk.CTkFrame):
         ).pack(
             fill="both",
             expand=True
+        )
+
+    # ==================================
+    # EXPORT EXCEL
+    # ==================================
+    def export_excel(self):
+
+        export_class_excel(
+            self.class_data,
+            self.students
+        )
+    
+    # ==================================
+    # EXPORT PDF
+    # ==================================
+    def export_pdf(self):
+
+        export_class_pdf(
+            self.class_data,
+            self.students
         )
 
     # ==================================
@@ -458,7 +480,8 @@ class ClassDetailPage(ctk.CTkFrame):
             ("Take Attendance", self.open_attendance),
             ("Grade Entry", self.open_grade_entry),
             ("Risk Analytics", self.open_analytics),
-            ("Export Report", None)
+            ("Export Excel", self.export_excel),
+            ("Export PDF", self.export_pdf)
         ]
 
         for text, command in actions:
